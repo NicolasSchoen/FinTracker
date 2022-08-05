@@ -10,16 +10,18 @@ class AddEntryWindow:
         self.newWindow = tk.Toplevel(context.app)
         self.newWindow.title(context.txt.addEntry)
         self.newWindow.geometry("400x200")
-        self.newWindow.grid_columnconfigure(0,weight=1)
-        self.newWindow.grid_columnconfigure(1,weight=1)
-        self.newWindow.grid_columnconfigure(2,weight=1)
+        #self.newWindow.rowconfigure(0,weight=1)
+        self.newWindow.columnconfigure(0,weight=1)
 
         self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
 
-        self.entrAddEntryName = ttk.Entry(self.newWindow)
+        self.entrAddEntryName = ttk.Entry(self.newWindow,justify='center')
         self.entrAddEntryName.grid(
             column=0,
             row=0,
+            ipady=5,
+            padx=10,
+            pady=2,
             sticky="EW"
         )
 
@@ -27,6 +29,9 @@ class AddEntryWindow:
         self.btnCreateEntry.grid(
             column=0,
             row=1,
+            ipady=5,
+            padx=10,
+            pady=2,
             sticky="EW"
         )
 
@@ -34,6 +39,9 @@ class AddEntryWindow:
         btnAbort.grid(
             column=0,
             row=2,
+            ipady=5,
+            padx=10,
+            pady=2,
             sticky="EW"
         )
 
@@ -51,13 +59,17 @@ class AddCategoryWindow:
         self.newWindow = tk.Toplevel(context.app)
         self.newWindow.title(context.txt.addCategory)
         self.newWindow.geometry("400x200")
+        self.newWindow.columnconfigure(0,weight=1)
 
         self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
 
-        self.entrAddCategoryName = ttk.Entry(self.newWindow)
+        self.entrAddCategoryName = ttk.Entry(self.newWindow,justify='center')
         self.entrAddCategoryName.grid(
             column=0,
             row=0,
+            ipady=5,
+            padx=10,
+            pady=2,
             sticky="EW"
         )
 
@@ -65,6 +77,9 @@ class AddCategoryWindow:
         self.btnCreateCategory.grid(
             column=0,
             row=1,
+            ipady=5,
+            padx=10,
+            pady=2,
             sticky="EW"
         )
 
@@ -72,6 +87,9 @@ class AddCategoryWindow:
         self.btnAbort.grid(
             column=0,
             row=2,
+            ipady=5,
+            padx=10,
+            pady=2,
             sticky="EW"
         )
 
@@ -111,6 +129,8 @@ class FinTrackGUI:
         self.app.title(self.txt.mainTitle)
         self.app.geometry('800x500')
         self.app.iconbitmap(os.path.join(os.path.dirname(__file__),"resources/icon.ico"))
+        self.app.columnconfigure(1,weight=1)
+        self.app.rowconfigure(0,weight=1)
 
         #Menubar initialization
         self.menubar = tk.Menu(self.app)
@@ -129,7 +149,8 @@ class FinTrackGUI:
         self.frameMain = tk.Frame(self.app)
         self.frameMain.grid(
             column=0,
-            row=0
+            row=0,
+            sticky="N"
         )
 
         self.frameInfo = tk.Frame(self.app)
@@ -138,6 +159,8 @@ class FinTrackGUI:
             row=0,
             sticky="NSEW"
         )
+        self.frameInfo.columnconfigure(0,weight=1)
+        self.frameInfo.rowconfigure(0,weight=1)
 
         self.tabControl = ttk.Notebook(self.frameInfo)
 
