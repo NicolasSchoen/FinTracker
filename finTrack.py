@@ -4,6 +4,85 @@ import tkinter.ttk as ttk
 import finTrackDao
 import finTrackLang
 
+class AddEntryWindow:
+    def __init__(self,context) -> None:
+        self.context = context
+        self.newWindow = tk.Toplevel(context.app)
+        self.newWindow.title(context.txt.addEntry)
+        self.newWindow.geometry("400x200")
+        self.newWindow.grid_columnconfigure(0,weight=1)
+        self.newWindow.grid_columnconfigure(1,weight=1)
+        self.newWindow.grid_columnconfigure(2,weight=1)
+
+        self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
+
+        self.entrAddEntryName = ttk.Entry(self.newWindow)
+        self.entrAddEntryName.grid(
+            column=0,
+            row=0,
+            sticky="EW"
+        )
+
+        self.btnCreateEntry = ttk.Button(self.newWindow,text=context.txt.addEntry,command=self.clickAddEntry)
+        self.btnCreateEntry.grid(
+            column=0,
+            row=1,
+            sticky="EW"
+        )
+
+        btnAbort = ttk.Button(self.newWindow,text=context.txt.abort,command=self.closeWindow)
+        btnAbort.grid(
+            column=0,
+            row=2,
+            sticky="EW"
+        )
+
+    def closeWindow(self):
+        self.context.btnAddEntry.configure(state='normal')
+        self.newWindow.destroy()
+
+    def clickAddEntry(self):
+        #TODO
+        self.closeWindow()
+
+class AddCategoryWindow:
+    def __init__(self,context) -> None:
+        self.context = context
+        self.newWindow = tk.Toplevel(context.app)
+        self.newWindow.title(context.txt.addCategory)
+        self.newWindow.geometry("400x200")
+
+        self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
+
+        self.entrAddCategoryName = ttk.Entry(self.newWindow)
+        self.entrAddCategoryName.grid(
+            column=0,
+            row=0,
+            sticky="EW"
+        )
+
+        self.btnCreateCategory = ttk.Button(self.newWindow,text=context.txt.addCategory,command=self.clickAddCategory)
+        self.btnCreateCategory.grid(
+            column=0,
+            row=1,
+            sticky="EW"
+        )
+
+        self.btnAbort = ttk.Button(self.newWindow,text=context.txt.abort,command=self.closeWindow)
+        self.btnAbort.grid(
+            column=0,
+            row=2,
+            sticky="EW"
+        )
+
+    def closeWindow(self):
+        self.context.btnAddCategory.configure(state='normal')
+        self.newWindow.destroy()
+        
+    def clickAddCategory(self):
+        #TODO
+        self.closeWindow()
+
 class FinTrackGUI:
     def __init__(self) -> None:
         self.__loadLocalizedTexts()
@@ -19,12 +98,12 @@ class FinTrackGUI:
         self.dataBase = finTrackDao.FinTrackDAO()
 
     def __clickedAddEntry(self):
-        # TODO
-        print("clicked Add Entry!")
+        self.btnAddEntry.configure(state='disabled')
+        AddEntryWindow(self)
 
     def __clickedAddCategory(self):
-        # TODO
-        print("clicked Add Category!")
+        self.btnAddCategory.configure(state='disabled')
+        AddCategoryWindow(self)
 
     def __buildUi(self):
         # TODO
@@ -37,7 +116,9 @@ class FinTrackGUI:
         self.menubar = tk.Menu(self.app)
 
         self.filemenu = tk.Menu(self.menubar,tearoff=0)
+        self.filemenu.add_command(label=self.txt.save)
         self.filemenu.add_command(label=self.txt.load)
+        self.filemenu.add_command(label=self.txt.options)
         self.filemenu.add_command(label=self.txt.exit,command=lambda: self.app.quit())
 
         self.menubar.add_cascade(label=self.txt.file, menu=self.filemenu)
@@ -45,9 +126,37 @@ class FinTrackGUI:
         self.app.config(menu=self.menubar)
 
 
+        self.frameMain = tk.Frame(self.app)
+        self.frameMain.grid(
+            column=0,
+            row=0
+        )
+
+        self.frameInfo = tk.Frame(self.app)
+        self.frameInfo.grid(
+            column=1,
+            row=0,
+            sticky="NSEW"
+        )
+
+        self.tabControl = ttk.Notebook(self.frameInfo)
+
+        self.tabGraphic = ttk.Frame(self.tabControl) #TODO
+
+        self.tabTable = ttk.Frame(self.tabControl) #TODO
+
+        self.tabControl.add(self.tabGraphic, text=self.txt.tabGraphic)
+        self.tabControl.add(self.tabTable, text=self.txt.tabTable)
+
+        self.tabControl.grid(
+            column=0,
+            row=0,
+            sticky="NSEW"
+        )
+
 
         self.btnAddEntry = ttk.Button(
-            self.app,
+            self.frameMain,
             text=self.txt.addEntry,
             command=self.__clickedAddEntry
         )
@@ -60,7 +169,7 @@ class FinTrackGUI:
         )
 
         self.btnAddCategory = ttk.Button(
-            self.app,
+            self.frameMain,
             text=self.txt.addCategory,
             command=self.__clickedAddCategory
         )
@@ -71,6 +180,7 @@ class FinTrackGUI:
             ipady=10,
             sticky="EW"
         )
+
 
     def StartUI(self):
         """Starts TK-App"""
