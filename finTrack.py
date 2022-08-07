@@ -1,4 +1,5 @@
 import os
+from tkinter import messagebox
 import tkinter as tk
 import tkinter.ttk as ttk
 import finTrackDao
@@ -24,6 +25,7 @@ class AddEntryWindow:
             pady=2,
             sticky="EW"
         )
+        self.entrAddEntryName.focus()
 
         self.btnCreateEntry = ttk.Button(self.newWindow,text=context.txt.addEntry,command=self.clickAddEntry)
         self.btnCreateEntry.grid(
@@ -72,6 +74,7 @@ class AddCategoryWindow:
             pady=2,
             sticky="EW"
         )
+        self.entrAddCategoryName.focus()
 
         self.btnCreateCategory = ttk.Button(self.newWindow,text=context.txt.addCategory,command=self.clickAddCategory)
         self.btnCreateCategory.grid(
@@ -98,18 +101,22 @@ class AddCategoryWindow:
         self.newWindow.destroy()
         
     def clickAddCategory(self):
-        #TODO
-        self.closeWindow()
+        categoryName = str(self.entrAddCategoryName.get())
+
+        success = self.context.dataBase.addCategory(categoryName)
+        if(success[0]): self.closeWindow()
+        if(not success[0]):
+            messagebox.showinfo(self.context.txt.errorAddCategory,success[1])
 
 class FinTrackGUI:
-    def __init__(self) -> None:
+    def __init__(self):
         self.__loadLocalizedTexts()
         self.__initializeDatabase()
         self.__buildUi()
 
-    def __loadLocalizedTexts(self):
+    def __loadLocalizedTexts(self,lang="en"):
         # TODO
-        self.txt = finTrackLang.FinTrackLang()
+        self.txt = finTrackLang.FinTrackLang(lang=lang)
 
     def __initializeDatabase(self):
         # TODO
