@@ -10,15 +10,22 @@ class AddEntryWindow:
         self.context = context
         self.newWindow = tk.Toplevel(context.app)
         self.newWindow.title(context.txt.addEntry)
-        self.newWindow.geometry("400x200")
+        self.newWindow.geometry("400x250")
         #self.newWindow.rowconfigure(0,weight=1)
-        self.newWindow.columnconfigure(0,weight=1)
+        self.newWindow.columnconfigure(list(range(2)),weight=1)
 
         self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
 
+        self.lblAddEntryName = ttk.Label(self.newWindow,text=context.txt.entryName)
+        self.lblAddEntryName.grid(
+            column=0,
+            row=0,
+            sticky="E"
+        )
+
         self.entrAddEntryName = ttk.Entry(self.newWindow,justify='center')
         self.entrAddEntryName.grid(
-            column=0,
+            column=1,
             row=0,
             ipady=5,
             padx=10,
@@ -27,10 +34,66 @@ class AddEntryWindow:
         )
         self.entrAddEntryName.focus()
 
+        self.lblAddEntryAmount = ttk.Label(self.newWindow,text=context.txt.entryAmount)
+        self.lblAddEntryAmount.grid(
+            column=0,
+            row=1,
+            sticky="E"
+        )
+
+        self.entrAddEntryAmount = ttk.Entry(self.newWindow,justify='center')
+        self.entrAddEntryAmount.grid(
+            column=1,
+            row=1,
+            ipady=5,
+            padx=10,
+            pady=2,
+            sticky="EW"
+        )
+
+        self.lblTimeStamp = ttk.Label(self.newWindow,text=context.txt.entryTimeStamp)
+        self.lblTimeStamp.grid(
+            column=0,
+            row=2,
+            sticky="E"
+        )
+
+        # TODO
+
+        self.lblRecurring = ttk.Label(self.newWindow,text=context.txt.entryRecurring)
+        self.lblRecurring.grid(
+            column=0,
+            row=3,
+            sticky="E"
+        )
+
+        # TODO
+
+        self.lblIsMonthly = ttk.Label(self.newWindow,text=context.txt.entryMonthly)
+        self.lblIsMonthly.grid(
+            column=0,
+            row=4,
+            sticky="E"
+        )
+
+        # TODO
+
+        self.lblCategory = ttk.Label(self.newWindow,text=context.txt.entryCategory)
+        self.lblCategory.grid(
+            column=0,
+            row=5,
+            sticky="E"
+        )
+
+        # TODO
+
+        # TODO Income or Expense
+
         self.btnCreateEntry = ttk.Button(self.newWindow,text=context.txt.addEntry,command=self.clickAddEntry)
         self.btnCreateEntry.grid(
             column=0,
-            row=1,
+            row=7,
+            columnspan=2,
             ipady=5,
             padx=10,
             pady=2,
@@ -40,7 +103,8 @@ class AddEntryWindow:
         btnAbort = ttk.Button(self.newWindow,text=context.txt.abort,command=self.closeWindow)
         btnAbort.grid(
             column=0,
-            row=2,
+            row=8,
+            columnspan=2,
             ipady=5,
             padx=10,
             pady=2,
@@ -65,10 +129,17 @@ class AddCategoryWindow:
 
         self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
 
+        self.lblAddCategoryName = ttk.Label(self.newWindow,text=context.txt.categoryName)
+        self.lblAddCategoryName.grid(
+            column=0,
+            row=0,
+            ipady=5
+        )
+
         self.entrAddCategoryName = ttk.Entry(self.newWindow,justify='center')
         self.entrAddCategoryName.grid(
             column=0,
-            row=0,
+            row=1,
             ipady=5,
             padx=10,
             pady=2,
@@ -79,7 +150,7 @@ class AddCategoryWindow:
         self.btnCreateCategory = ttk.Button(self.newWindow,text=context.txt.addCategory,command=self.clickAddCategory)
         self.btnCreateCategory.grid(
             column=0,
-            row=1,
+            row=2,
             ipady=5,
             padx=10,
             pady=2,
@@ -89,7 +160,7 @@ class AddCategoryWindow:
         self.btnAbort = ttk.Button(self.newWindow,text=context.txt.abort,command=self.closeWindow)
         self.btnAbort.grid(
             column=0,
-            row=2,
+            row=3,
             ipady=5,
             padx=10,
             pady=2,
@@ -130,6 +201,15 @@ class FinTrackGUI:
         self.btnAddCategory.configure(state='disabled')
         AddCategoryWindow(self)
 
+    def __clickedSave(self):
+        pass # TODO
+
+    def __clickedLoad(self):
+        pass # TODO
+
+    def __clickedOptions(self):
+        print("clicked Options") # TODO
+
     def __buildUi(self):
         # TODO
         self.app = tk.Tk()
@@ -143,9 +223,9 @@ class FinTrackGUI:
         self.menubar = tk.Menu(self.app)
 
         self.filemenu = tk.Menu(self.menubar,tearoff=0)
-        self.filemenu.add_command(label=self.txt.save)
-        self.filemenu.add_command(label=self.txt.load)
-        self.filemenu.add_command(label=self.txt.options)
+        self.filemenu.add_command(label=self.txt.save,command=self.__clickedSave)
+        self.filemenu.add_command(label=self.txt.load,command=self.__clickedLoad)
+        self.filemenu.add_command(label=self.txt.options,command=self.__clickedOptions)
         self.filemenu.add_command(label=self.txt.exit,command=lambda: self.app.quit())
 
         self.menubar.add_cascade(label=self.txt.file, menu=self.filemenu)
