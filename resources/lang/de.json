@@ -1,0 +1,22 @@
+{
+    "LanguageName": "Deutsch",
+    "abort": "Abbrechen",
+    "addCategory": "Kategorie erstellen",
+    "addEntry": "Eintrag hinzufügen",
+    "categoryName": "Kategoriename",
+    "entryAmount": "Betrag des Eintrags:",
+    "entryCategory": "Kategorie:",
+    "entryMonthly": "monatlich (sonst jährlich):",
+    "entryName": "Name des Eintrags:",
+    "entryRecurring": "Wiederholend:",
+    "entryTimeStamp": "Datum des Eintrags:",
+    "errorAddCategory": "Fehler bei Erstellung neuer Kategorie",
+    "exit": "Beenden",
+    "file": "Datei",
+    "load": "Laden",
+    "mainTitle": "FinTrack",
+    "options": "Optionen",
+    "save": "Speichern",
+    "tabGraphic": "Grafik",
+    "tabTable": "Tabelle"
+}

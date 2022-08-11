@@ -1,0 +1,22 @@
+{
+    "LanguageName": "English",
+    "abort": "Abort",
+    "addCategory": "Add Category",
+    "addEntry": "Add Entry",
+    "categoryName": "Category Name",
+    "entryAmount": "Entry Amount:",
+    "entryCategory": "Category:",
+    "entryMonthly": "monthly (otherwise yearly):",
+    "entryName": "Entry Name:",
+    "entryRecurring": "Recurring:",
+    "entryTimeStamp": "Date of Entry:",
+    "errorAddCategory": "Error When Creating Category",
+    "exit": "Exit",
+    "file": "File",
+    "load": "Load",
+    "mainTitle": "FinTrack",
+    "options": "Options",
+    "save": "Save",
+    "tabGraphic": "Graphic",
+    "tabTable": "Table"
+}

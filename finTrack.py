@@ -9,14 +9,14 @@ class AddEntryWindow:
     def __init__(self,context) -> None:
         self.context = context
         self.newWindow = tk.Toplevel(context.app)
-        self.newWindow.title(context.txt.addEntry)
+        self.newWindow.title(context.txt.getText("addEntry"))
         self.newWindow.geometry("400x250")
         #self.newWindow.rowconfigure(0,weight=1)
         self.newWindow.columnconfigure(list(range(2)),weight=1)
 
         self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
 
-        self.lblAddEntryName = ttk.Label(self.newWindow,text=context.txt.entryName)
+        self.lblAddEntryName = ttk.Label(self.newWindow,text=context.txt.getText("entryName"))
         self.lblAddEntryName.grid(
             column=0,
             row=0,
@@ -34,7 +34,7 @@ class AddEntryWindow:
         )
         self.entrAddEntryName.focus()
 
-        self.lblAddEntryAmount = ttk.Label(self.newWindow,text=context.txt.entryAmount)
+        self.lblAddEntryAmount = ttk.Label(self.newWindow,text=context.txt.getText("entryAmount"))
         self.lblAddEntryAmount.grid(
             column=0,
             row=1,
@@ -51,7 +51,7 @@ class AddEntryWindow:
             sticky="EW"
         )
 
-        self.lblTimeStamp = ttk.Label(self.newWindow,text=context.txt.entryTimeStamp)
+        self.lblTimeStamp = ttk.Label(self.newWindow,text=context.txt.getText("entryTimeStamp"))
         self.lblTimeStamp.grid(
             column=0,
             row=2,
@@ -60,7 +60,7 @@ class AddEntryWindow:
 
         # TODO
 
-        self.lblRecurring = ttk.Label(self.newWindow,text=context.txt.entryRecurring)
+        self.lblRecurring = ttk.Label(self.newWindow,text=context.txt.getText("entryRecurring"))
         self.lblRecurring.grid(
             column=0,
             row=3,
@@ -69,7 +69,7 @@ class AddEntryWindow:
 
         # TODO
 
-        self.lblIsMonthly = ttk.Label(self.newWindow,text=context.txt.entryMonthly)
+        self.lblIsMonthly = ttk.Label(self.newWindow,text=context.txt.getText("entryMonthly"))
         self.lblIsMonthly.grid(
             column=0,
             row=4,
@@ -78,7 +78,7 @@ class AddEntryWindow:
 
         # TODO
 
-        self.lblCategory = ttk.Label(self.newWindow,text=context.txt.entryCategory)
+        self.lblCategory = ttk.Label(self.newWindow,text=context.txt.getText("entryCategory"))
         self.lblCategory.grid(
             column=0,
             row=5,
@@ -89,7 +89,7 @@ class AddEntryWindow:
 
         # TODO Income or Expense
 
-        self.btnCreateEntry = ttk.Button(self.newWindow,text=context.txt.addEntry,command=self.clickAddEntry)
+        self.btnCreateEntry = ttk.Button(self.newWindow,text=context.txt.getText("addEntry"),command=self.clickAddEntry)
         self.btnCreateEntry.grid(
             column=0,
             row=7,
@@ -100,7 +100,7 @@ class AddEntryWindow:
             sticky="EW"
         )
 
-        btnAbort = ttk.Button(self.newWindow,text=context.txt.abort,command=self.closeWindow)
+        btnAbort = ttk.Button(self.newWindow,text=context.txt.getText("abort"),command=self.closeWindow)
         btnAbort.grid(
             column=0,
             row=8,
@@ -123,13 +123,13 @@ class AddCategoryWindow:
     def __init__(self,context) -> None:
         self.context = context
         self.newWindow = tk.Toplevel(context.app)
-        self.newWindow.title(context.txt.addCategory)
+        self.newWindow.title(context.txt.getText("addCategory"))
         self.newWindow.geometry("400x200")
         self.newWindow.columnconfigure(0,weight=1)
 
         self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
 
-        self.lblAddCategoryName = ttk.Label(self.newWindow,text=context.txt.categoryName)
+        self.lblAddCategoryName = ttk.Label(self.newWindow,text=context.txt.getText("categoryName"))
         self.lblAddCategoryName.grid(
             column=0,
             row=0,
@@ -147,7 +147,7 @@ class AddCategoryWindow:
         )
         self.entrAddCategoryName.focus()
 
-        self.btnCreateCategory = ttk.Button(self.newWindow,text=context.txt.addCategory,command=self.clickAddCategory)
+        self.btnCreateCategory = ttk.Button(self.newWindow,text=context.txt.getText("addCategory"),command=self.clickAddCategory)
         self.btnCreateCategory.grid(
             column=0,
             row=2,
@@ -157,7 +157,7 @@ class AddCategoryWindow:
             sticky="EW"
         )
 
-        self.btnAbort = ttk.Button(self.newWindow,text=context.txt.abort,command=self.closeWindow)
+        self.btnAbort = ttk.Button(self.newWindow,text=context.txt.getText("abort"),command=self.closeWindow)
         self.btnAbort.grid(
             column=0,
             row=3,
@@ -177,7 +177,37 @@ class AddCategoryWindow:
         success = self.context.dataBase.addCategory(categoryName)
         if(success[0]): self.closeWindow()
         if(not success[0]):
-            messagebox.showinfo(self.context.txt.errorAddCategory,success[1])
+            messagebox.showinfo(self.context.txt.getText("errorAddCategory"),success[1])
+
+class OptionsWindow:
+    def __init__(self,context) -> None:
+        self.context = context
+        self.newWindow = tk.Toplevel(context.app)
+        self.newWindow.title(context.txt.getText("options"))
+        self.newWindow.geometry("400x200")
+        self.newWindow.columnconfigure(0,weight=1)
+
+        self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
+
+        self.selectedLanguage = tk.StringVar() #context.txt.getSelectedLanguage()
+
+        self.comboboxLanguage = ttk.Combobox(self.newWindow,textvariable=self.selectedLanguage)
+        self.comboboxLanguage['values'] = list(context.txt.getAllLanguages().keys())
+        self.comboboxLanguage['state'] = 'readonly'
+        self.comboboxLanguage.grid(
+            column=0,
+            row=0
+        )
+
+        self.comboboxLanguage.bind('<<ComboboxSelected>>',self.language_Changed)
+
+    def language_Changed(self,event):
+        print("language changed",self.selectedLanguage.get())
+        self.context.txt.changeLanguage(str(self.selectedLanguage.get()))
+        # TODO refresh screen
+
+    def closeWindow(self):
+        self.newWindow.destroy()
 
 class FinTrackGUI:
     def __init__(self):
@@ -208,12 +238,12 @@ class FinTrackGUI:
         pass # TODO
 
     def __clickedOptions(self):
-        print("clicked Options") # TODO
+        OptionsWindow(self)
 
     def __buildUi(self):
         # TODO
         self.app = tk.Tk()
-        self.app.title(self.txt.mainTitle)
+        self.app.title(self.txt.getText("mainTitle"))
         self.app.geometry('800x500')
         self.app.iconbitmap(os.path.join(os.path.dirname(__file__),"resources/icon.ico"))
         self.app.columnconfigure(1,weight=1)
@@ -223,12 +253,12 @@ class FinTrackGUI:
         self.menubar = tk.Menu(self.app)
 
         self.filemenu = tk.Menu(self.menubar,tearoff=0)
-        self.filemenu.add_command(label=self.txt.save,command=self.__clickedSave)
-        self.filemenu.add_command(label=self.txt.load,command=self.__clickedLoad)
-        self.filemenu.add_command(label=self.txt.options,command=self.__clickedOptions)
-        self.filemenu.add_command(label=self.txt.exit,command=lambda: self.app.quit())
+        self.filemenu.add_command(label=self.txt.getText("save"),command=self.__clickedSave)
+        self.filemenu.add_command(label=self.txt.getText("load"),command=self.__clickedLoad)
+        self.filemenu.add_command(label=self.txt.getText("options"),command=self.__clickedOptions)
+        self.filemenu.add_command(label=self.txt.getText("exit"),command=lambda: self.app.quit())
 
-        self.menubar.add_cascade(label=self.txt.file, menu=self.filemenu)
+        self.menubar.add_cascade(label=self.txt.getText("file"), menu=self.filemenu)
 
         self.app.config(menu=self.menubar)
 
@@ -255,8 +285,8 @@ class FinTrackGUI:
 
         self.tabTable = ttk.Frame(self.tabControl) #TODO
 
-        self.tabControl.add(self.tabGraphic, text=self.txt.tabGraphic)
-        self.tabControl.add(self.tabTable, text=self.txt.tabTable)
+        self.tabControl.add(self.tabGraphic, text=self.txt.getText("tabGraphic"))
+        self.tabControl.add(self.tabTable, text=self.txt.getText("tabTable"))
 
         self.tabControl.grid(
             column=0,
@@ -267,7 +297,7 @@ class FinTrackGUI:
 
         self.btnAddEntry = ttk.Button(
             self.frameMain,
-            text=self.txt.addEntry,
+            text=self.txt.getText("addEntry"),
             command=self.__clickedAddEntry
         )
         self.btnAddEntry.grid(
@@ -280,7 +310,7 @@ class FinTrackGUI:
 
         self.btnAddCategory = ttk.Button(
             self.frameMain,
-            text=self.txt.addCategory,
+            text=self.txt.getText("addCategory"),
             command=self.__clickedAddCategory
         )
         self.btnAddCategory.grid(
