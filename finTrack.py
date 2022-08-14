@@ -1,7 +1,9 @@
 import os
+import time
 from tkinter import messagebox
 import tkinter as tk
 import tkinter.ttk as ttk
+from xdrlib import ConversionError
 import finTrackDao
 import finTrackLang
 
@@ -10,7 +12,7 @@ class AddEntryWindow:
         self.context = context
         self.newWindow = tk.Toplevel(context.app)
         self.newWindow.title(context.txt.getText("addEntry"))
-        self.newWindow.geometry("400x250")
+        self.newWindow.geometry("400x280")
         #self.newWindow.rowconfigure(0,weight=1)
         self.newWindow.columnconfigure(list(range(2)),weight=1)
 
@@ -60,23 +62,21 @@ class AddEntryWindow:
 
         # TODO
 
-        self.lblRecurring = ttk.Label(self.newWindow,text=context.txt.getText("entryRecurring"))
-        self.lblRecurring.grid(
-            column=0,
+        self.IsRecurring = tk.BooleanVar(value=False)
+        self.chkRecurring = ttk.Checkbutton(self.newWindow,variable=self.IsRecurring,text=context.txt.getText("entryRecurring"))
+        self.chkRecurring.grid(
+            column=1,
             row=3,
-            sticky="E"
+            sticky="EW"
         )
 
-        # TODO
-
-        self.lblIsMonthly = ttk.Label(self.newWindow,text=context.txt.getText("entryMonthly"))
-        self.lblIsMonthly.grid(
-            column=0,
+        self.IsMonthly = tk.BooleanVar(value=True)
+        self.chkMonthly = ttk.Checkbutton(self.newWindow,variable=self.IsMonthly,text=context.txt.getText("entryMonthly"))
+        self.chkMonthly.grid(
+            column=1,
             row=4,
-            sticky="E"
+            sticky="EW"
         )
-
-        # TODO
 
         self.lblCategory = ttk.Label(self.newWindow,text=context.txt.getText("entryCategory"))
         self.lblCategory.grid(
@@ -85,14 +85,32 @@ class AddEntryWindow:
             sticky="E"
         )
 
-        # TODO
+        self.selectedCategory = tk.StringVar(value=context.txt.getText("none"))
 
-        # TODO Income or Expense
+        self.comboboxCategorys = ttk.Combobox(self.newWindow,textvariable=self.selectedCategory)
+        self.comboboxCategorys['values'] = list(context.dataBase.getCategorys())
+        self.comboboxCategorys['state'] = 'readonly'
+        self.comboboxCategorys.grid(
+            column=1,
+            row=5,
+            sticky="EW"
+        )
 
-        self.btnCreateEntry = ttk.Button(self.newWindow,text=context.txt.getText("addEntry"),command=self.clickAddEntry)
-        self.btnCreateEntry.grid(
+        self.btnCreateIncome = ttk.Button(self.newWindow,text=context.txt.getText("addIncome"),command=self.clickAddIncome)
+        self.btnCreateIncome.grid(
             column=0,
             row=7,
+            columnspan=2,
+            ipady=5,
+            padx=10,
+            pady=2,
+            sticky="EW"
+        )
+
+        self.btnCreateExpense = ttk.Button(self.newWindow,text=context.txt.getText("addExpense"),command=self.clickAddExpense)
+        self.btnCreateExpense.grid(
+            column=0,
+            row=6,
             columnspan=2,
             ipady=5,
             padx=10,
@@ -115,8 +133,53 @@ class AddEntryWindow:
         self.context.btnAddEntry.configure(state='normal')
         self.newWindow.destroy()
 
-    def clickAddEntry(self):
+    def clickAddExpense(self):
+        self.addEntry(True)
+
+    def clickAddIncome(self):
+        self.addEntry(False)
+
+    def addEntry(self,isExpense=True):
         #TODO
+        if(self.entrAddEntryName.get() == ""):
+            messagebox.showinfo(self.context.txt.getText("errorAddEntry"),self.context.txt.getText("errorAddEntryNameMissing"))
+            return
+
+        try:
+            entryAmount =  float(self.entrAddEntryAmount.get())
+
+            if(entryAmount <= 0):
+                messagebox.showinfo(self.context.txt.getText("errorAddEntry"),self.context.txt.getText("errorAddEntryValueInvalid"))
+                return
+
+            entryCategory = self.selectedCategory.get()
+            if(entryCategory == self.context.txt.getText("none")):
+                entryCategory = None
+
+            # TODO specify time
+            if(isExpense):
+                self.context.dataBase.addExpense(
+                    self.entrAddEntryName.get(),
+                    entryAmount,
+                    time.time(),
+                    self.IsRecurring.get(),
+                    self.IsMonthly.get(),
+                    entryCategory
+                )
+            else:
+                self.context.dataBase.addIncome(
+                    self.entrAddEntryName.get(),
+                    entryAmount,
+                    time.time(),
+                    self.IsRecurring.get(),
+                    self.IsMonthly.get()
+                )
+
+            self.IsRecurring.get()
+
+        except ValueError:
+            messagebox.showinfo(self.context.txt.getText("errorAddEntry"),self.context.txt.getText("errorAddEntryValueInvalid"))
+            return
         self.closeWindow()
 
 class AddCategoryWindow:
@@ -189,7 +252,7 @@ class OptionsWindow:
 
         self.newWindow.protocol("WM_DELETE_WINDOW", self.closeWindow)
 
-        self.selectedLanguage = tk.StringVar() #context.txt.getSelectedLanguage()
+        self.selectedLanguage = tk.StringVar(value=context.txt.getSelectedLanguage())
 
         self.comboboxLanguage = ttk.Combobox(self.newWindow,textvariable=self.selectedLanguage)
         self.comboboxLanguage['values'] = list(context.txt.getAllLanguages().keys())

@@ -11,18 +11,24 @@ class FinTrackLang:
             "abort": "Abort",
             "addCategory": "Add Category",
             "addEntry": "Add Entry",
+            "addExpense": "Add Expense",
+            "addIncome": "Add Income",
             "categoryName": "Category Name",
             "entryAmount": "Entry Amount:",
             "entryCategory": "Category:",
             "entryMonthly": "monthly (otherwise yearly):",
             "entryName": "Entry Name:",
-            "entryRecurring": "Recurring:",
+            "entryRecurring": "Recurring",
             "entryTimeStamp": "Date of Entry:",
             "errorAddCategory": "Error When Creating Category",
+            "errorAddEntry": "Error When Creating Entry",
+            "errorAddEntryNameMissing": "name for Entry is missing!",
+            "errorAddEntryValueInvalid": "Entry amount is invalid!",
             "exit": "Exit",
             "file": "File",
             "load": "Load",
             "mainTitle": "FinTrack",
+            "none": "None",
             "options": "Options",
             "save": "Save",
             "tabGraphic": "Graphic",
@@ -51,6 +57,7 @@ class FinTrackLang:
 
         if(lang in self.languages.values()):
             self.__loadJson(lang)
+            self.currentLanguage = self.langDict["LanguageName"]
 
 
     def getSelectedLanguage(self):
